@@ -18,10 +18,34 @@ FRONTMATTER_FIELD = re.compile(r"^(name|description):\s*(\S.*)$")
 UI_FIELD = re.compile(r'^ {2}(display_name|short_description|default_prompt):\s+"([^"]*)"\s*$')
 README_LINK = re.compile(r"\]\((skills/([a-z0-9-]+)/SKILL\.md)\)")
 NULL_VALUE = re.compile(r"^(?:null|Null|NULL|~)(?:\s+#.*)?$")
+FENCE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
+EXACT_OUTPUT_HEADING = re.compile(r"^ {0,3}## Exact output format\s*$")
 
 
 def fail(errors: list[str], path: Path, message: str) -> None:
     errors.append(f"{path}: {message}")
+
+
+def markdown_lines_outside_fences(text: str) -> tuple[list[str], bool]:
+    """Return non-fenced lines and whether a Markdown fence is unclosed."""
+
+    lines_outside_fences: list[str] = []
+    open_marker: str | None = None
+    open_length = 0
+    for line in text.splitlines():
+        fence = FENCE.match(line)
+        if fence:
+            marker = fence.group("marker")
+            if open_marker is None:
+                open_marker = marker[0]
+                open_length = len(marker)
+            elif marker[0] == open_marker and len(marker) >= open_length:
+                open_marker = None
+                open_length = 0
+            continue
+        if open_marker is None:
+            lines_outside_fences.append(line)
+    return lines_outside_fences, open_marker is not None
 
 
 def validate_skill(skill_dir: Path, errors: list[str]) -> None:
@@ -68,7 +92,8 @@ def validate_skill(skill_dir: Path, errors: list[str]) -> None:
         fail(errors, skill_file, "frontmatter name must match directory name")
     if fields.get("name") and not NAME_RE.fullmatch(fields["name"]):
         fail(errors, skill_file, "name must be lowercase hyphen-case")
-    if text.count("```") % 2:
+    lines_outside_fences, has_unclosed_fence = markdown_lines_outside_fences(text)
+    if has_unclosed_fence:
         fail(errors, skill_file, "Markdown code fences are unbalanced")
 
     metadata = metadata_file.read_text(encoding="utf-8")
@@ -101,8 +126,15 @@ def validate_skill(skill_dir: Path, errors: list[str]) -> None:
         fail(errors, metadata_file, "short_description must be 25-64 characters")
     if ui.get("default_prompt") and f"${skill_dir.name}" not in ui["default_prompt"]:
         fail(errors, metadata_file, "default_prompt must mention the skill with $skill-name")
-    if "## Exact output format" not in text:
+    output_headings = [
+        line
+        for line in lines_outside_fences
+        if EXACT_OUTPUT_HEADING.fullmatch(line)
+    ]
+    if not output_headings:
         fail(errors, skill_file, "missing exact output format section")
+    elif len(output_headings) > 1:
+        fail(errors, skill_file, "duplicate exact output format sections")
 
 
 def validate_readme(root: Path, skill_names: set[str], errors: list[str]) -> None:

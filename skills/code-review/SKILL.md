@@ -65,7 +65,7 @@ Use static analysis and security scanners as evidence and triage input, not as a
 
 ### 4. Apply the review matrix
 
-Cover every applicable row. Mark a row `N/A` only with a reason, and `BLOCKED` when required evidence could not be obtained.
+Cover every applicable row. Use the shared control-status vocabulary: `covered`, `partial`, `gap`, `blocked`, or `N/A` with a reason.
 
 | Area | Questions to answer | Preferred evidence |
 | --- | --- | --- |
@@ -86,12 +86,13 @@ For security-sensitive changes, additionally identify assets, entry points, trus
 
 ### 5. Classify and prioritize findings
 
-Use the highest justified severity, not the most alarming wording:
+Use the shared report vocabulary in `README.md` and choose the highest justified priority, not the most alarming wording:
 
 - `P0` — catastrophic or actively exploitable risk: probable data loss, systemic outage, credential compromise, or equivalent. Stop approval immediately.
 - `P1` — high-impact correctness, security, data, availability, or contract defect likely to affect production or block safe rollout. Request changes.
 - `P2` — material but bounded defect, regression, missing protection/test, operational risk, or maintainability issue that should normally be fixed in this change. Request changes when it affects the stated scope; otherwise make it an explicit follow-up.
 - `P3` — low-impact, non-blocking improvement with clear value and evidence. Do not hold the change solely for P3.
+- `P4` — informational observation or optional experiment with no current blocking risk.
 - `NIT` — optional style or readability polish. Use sparingly and never block.
 
 Label confidence separately: `confirmed` (reproduced or directly proven), `high` (strongly implied by code/contract), `medium` (plausible but missing a decisive fact), or `low` (request for investigation). Only `confirmed` or `high` findings should normally affect the gate; a medium/low hypothesis may block only when the potential impact is severe and the missing evidence is a required safety check.
@@ -114,7 +115,7 @@ Stop and return `CANNOT_COMPLETE` or `REQUEST_CHANGES` when any of the following
 - the diff changes behavior outside the declared scope, leaves an incompatible API/data migration, or cannot be safely rolled back;
 - the reviewer cannot establish coverage of an applicable matrix area.
 
-Return `APPROVE` only when scope and intent are understood, every applicable matrix area is covered or explicitly marked `N/A`/`BLOCKED`, required validation passes, no unresolved blocking finding remains, and the change is a net improvement to code health. Return `COMMENT_ONLY` when there are no blocking findings but useful P2/P3/NIT feedback or hypotheses remain. An approval is not a claim that no defects exist; it is a bounded decision based on the recorded evidence.
+Return `APPROVE` only when scope and intent are understood, every applicable matrix area is `covered` or explicitly marked `N/A`/`blocked`, required validation passes, no unresolved blocking finding remains, and the change is a net improvement to code health. Return `COMMENT_ONLY` when there are no blocking findings but useful P2/P3/NIT feedback or hypotheses remain. An approval is not a claim that no defects exist; it is a bounded decision based on the recorded evidence.
 
 ## Exact output format
 
@@ -140,18 +141,18 @@ Return this structure exactly, keeping sections even when empty. Replace every p
 ## Coverage
 | Matrix area | Status | Evidence or reason |
 |---|---|---|
-| Intent and context | COVERED/N/A/BLOCKED | <...> |
-| Correctness | COVERED/N/A/BLOCKED | <...> |
-| Edge cases and resilience | COVERED/N/A/BLOCKED | <...> |
-| Security | COVERED/N/A/BLOCKED | <...> |
-| Data and API contracts | COVERED/N/A/BLOCKED | <...> |
-| Architecture | COVERED/N/A/BLOCKED | <...> |
-| Performance and capacity | COVERED/N/A/BLOCKED | <...> |
-| Tests | COVERED/N/A/BLOCKED | <...> |
-| Observability and operations | COVERED/N/A/BLOCKED | <...> |
-| Dependencies and supply chain | COVERED/N/A/BLOCKED | <...> |
-| Documentation and user impact | COVERED/N/A/BLOCKED | <...> |
-| Maintainability | COVERED/N/A/BLOCKED | <...> |
+| Intent and context | covered/partial/gap/blocked/N/A | <...> |
+| Correctness | covered/partial/gap/blocked/N/A | <...> |
+| Edge cases and resilience | covered/partial/gap/blocked/N/A | <...> |
+| Security | covered/partial/gap/blocked/N/A | <...> |
+| Data and API contracts | covered/partial/gap/blocked/N/A | <...> |
+| Architecture | covered/partial/gap/blocked/N/A | <...> |
+| Performance and capacity | covered/partial/gap/blocked/N/A | <...> |
+| Tests | covered/partial/gap/blocked/N/A | <...> |
+| Observability and operations | covered/partial/gap/blocked/N/A | <...> |
+| Dependencies and supply chain | covered/partial/gap/blocked/N/A | <...> |
+| Documentation and user impact | covered/partial/gap/blocked/N/A | <...> |
+| Maintainability | covered/partial/gap/blocked/N/A | <...> |
 
 ## Findings
 ### F-001 — [P1] <short title> — `<path>:<line>` — confidence: confirmed
