@@ -1,0 +1,4 @@
+interface:
+  display_name: "Service Improvement"
+  short_description: "Review and improve production services"
+  default_prompt: "Use $service-improvement to assess this service, identify the highest-value risks, and propose verified reversible improvements."
