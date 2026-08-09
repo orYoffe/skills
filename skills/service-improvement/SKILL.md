@@ -84,7 +84,7 @@ Use profiling, query plans, flame graphs, traces, load tests, fault injection, o
 
 ### 6. Review the service across all dimensions
 
-Use the following checklist; mark each area `healthy`, `risk`, `gap`, or `N/A`, with evidence and an owner/action unless it is `N/A`.
+Use the following checklist; mark each area `healthy`, `risk`, `gap`, or `N/A`, with evidence and an owner/action unless it is `N/A`. When reporting control coverage, use the shared `covered`, `partial`, `gap`, `blocked`, or `N/A` vocabulary; reserve `healthy` and `risk` for the service-health assessment.
 
 | Dimension | Inspect for | Common anti-patterns |
 | --- | --- | --- |
@@ -107,9 +107,9 @@ For security, dependency, and release evidence, look for the applicable combinat
 
 ### 7. Prioritize findings
 
-Score each finding with explicit reasoning:
+Score each finding with explicit reasoning, using the shared report vocabulary in `README.md`:
 
-- **Severity:** `P0` active catastrophic user, security, data, or recovery risk; `P1` material outage, data-integrity, security, or SLO risk; `P2` meaningful degradation, recurring toil, capacity, maintainability, or future risk; `P3` low-risk hygiene or optional improvement.
+- **Priority:** `P0` active catastrophic user, security, data, or recovery risk; `P1` material outage, data-integrity, security, or SLO risk; `P2` meaningful degradation, recurring toil, capacity, maintainability, or future risk; `P3` low-risk hygiene; `P4` informational or optional improvement.
 - **Urgency:** time to impact, exploitability, error-budget burn, upcoming load/change, and detectability.
 - **Confidence:** `high`, `medium`, or `low`, based on direct evidence and reproducibility.
 - **Effort and reversibility:** smallest safe change, blast radius, migration complexity, and rollback difficulty.
@@ -183,9 +183,10 @@ Return the following sections in this order. Keep the headings and field names s
 
 ## 5. Findings
 For each finding:
-### [ID] [P0–P3] Short title
+### [ID] [P0–P4] Short title
 - Dimension:
-- Status: [healthy | risk | gap | N/A]
+- Assessment: [healthy | risk | gap | N/A]
+- Control status: [covered | partial | gap | blocked | N/A]
 - Evidence:
 - User / business / operational impact:
 - Root cause or hypothesis:

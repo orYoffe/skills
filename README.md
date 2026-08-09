@@ -22,6 +22,15 @@ Choose one primary skill from the task’s center of gravity:
 
 Use the companion only when it answers a distinct question. Keep the primary skill’s report as the decision record and carry companion findings into its follow-up section.
 
+## Shared report vocabulary
+
+Skills use the following common vocabulary so findings remain comparable when reports are composed:
+
+- **Priority:** `P0` critical, `P1` high, `P2` material, `P3` low, `P4` informational; use `NIT` only for optional polish.
+- **Confidence:** `confirmed`, `high`, `medium`, or `low`.
+- **Evidence status:** `observed`, `inferred`, or `unverified`; use `unknown` when expected evidence was not obtained.
+- **Control status:** `covered`, `partial`, `gap`, `blocked`, or `N/A` with a reason.
+
 ## Local validation
 
 Run the dependency-free collection validator before opening a PR:
@@ -30,7 +39,7 @@ Run the dependency-free collection validator before opening a PR:
 python scripts/validate_skills.py
 ```
 
-It checks skill names, frontmatter, UI metadata, default prompts, Markdown fences, and bidirectional README indexing. The validator is a structural smoke test; run its regression tests and use each skill’s workflow and project-specific tests for behavioral quality.
+It checks skill names, frontmatter, UI metadata, default prompts, Markdown fences, and bidirectional README indexing. The regression suite also checks validator edge cases, output-template headings, and primary routing rows. The validator remains a structural smoke test; use each skill’s workflow and project-specific tests for behavioral quality.
 
 The repository workflow runs both commands on pull requests and pushes to `main`.
 

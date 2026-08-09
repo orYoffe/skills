@@ -8,6 +8,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.validate_skills import markdown_lines_outside_fences
+
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "scripts" / "validate_skills.py"
@@ -100,15 +102,144 @@ class ValidatorTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("real value", result.stderr)
 
+    def test_output_heading_inside_code_fence_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            skill_file = root / "skills" / "sample-skill" / "SKILL.md"
+            text = skill_file.read_text(encoding="utf-8")
+            text = text.replace("## Exact output format\n\n", "")
+            text = text.replace("```text\n", "```text\n## Exact output format\n")
+            skill_file.write_text(text, encoding="utf-8")
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing exact output format", result.stderr)
+
+    def test_missing_output_heading_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            skill_file = root / "skills" / "sample-skill" / "SKILL.md"
+            text = skill_file.read_text(encoding="utf-8").replace(
+                "## Exact output format\n\n", ""
+            )
+            skill_file.write_text(text, encoding="utf-8")
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing exact output format", result.stderr)
+
+    def test_markdown_heading_parser_ignores_fenced_content(self) -> None:
+        headings, unclosed = markdown_lines_outside_fences(
+            "# Real\n\n```markdown\n## Fake\n```\n"
+        )
+        self.assertFalse(unclosed)
+        self.assertIn("# Real", headings)
+        self.assertNotIn("## Fake", headings)
+
+    def test_duplicate_output_heading_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            skill_file = root / "skills" / "sample-skill" / "SKILL.md"
+            skill_file.write_text(
+                skill_file.read_text(encoding="utf-8")
+                + "\n## Exact output format\n",
+                encoding="utf-8",
+            )
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("duplicate exact output format", result.stderr)
+
+    def test_invalid_name_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            skill_file = root / "skills" / "sample-skill" / "SKILL.md"
+            skill_file.write_text(
+                skill_file.read_text(encoding="utf-8").replace(
+                    "name: sample-skill", "name: Sample_skill"
+                ),
+                encoding="utf-8",
+            )
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("lowercase hyphen-case", result.stderr)
+
+    def test_duplicate_frontmatter_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            skill_file = root / "skills" / "sample-skill" / "SKILL.md"
+            skill_file.write_text(
+                skill_file.read_text(encoding="utf-8").replace(
+                    "description: Review a sample skill for structural correctness.\n",
+                    "description: Review a sample skill for structural correctness.\n"
+                    "description: Duplicate description.\n",
+                ),
+                encoding="utf-8",
+            )
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("duplicate frontmatter field", result.stderr)
+
+    def test_invalid_metadata_values_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            metadata_file = root / "skills" / "sample-skill" / "agents" / "openai.yaml"
+            metadata = metadata_file.read_text(encoding="utf-8")
+            metadata = metadata.replace(
+                'short_description: "Validate a sample skill structure"',
+                'short_description: "Too short"',
+            ).replace("$sample-skill", "sample-skill")
+            metadata_file.write_text(metadata, encoding="utf-8")
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("25-64 characters", result.stderr)
+            self.assertIn("must mention the skill", result.stderr)
+
+    def test_dangling_readme_link_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            readme = root / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "- [missing](skills/missing/SKILL.md)\n",
+                encoding="utf-8",
+            )
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("link target does not exist", result.stderr)
+
+    def test_missing_skill_files_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            (root / "skills" / "sample-skill" / "SKILL.md").unlink()
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing SKILL.md", result.stderr)
+
+    def test_missing_metadata_files_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            (root / "skills" / "sample-skill" / "agents" / "openai.yaml").unlink()
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing agents/openai.yaml", result.stderr)
+
     def test_routing_index_keeps_primary_skills_visible(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        for phrase, skill in (
-            ("Review a PR", "code-review"),
-            ("Assess prompts", "agent-usage-review"),
-            ("Diagnose or improve", "service-improvement"),
-        ):
-            self.assertIn(phrase, readme)
-            self.assertIn(f"`{skill}`", readme)
+        routing = readme.split("## Routing and composition", 1)[1].split(
+            "Use the companion", 1
+        )[0]
+        for skill in ("code-review", "agent-usage-review", "service-improvement"):
+            self.assertIn(
+                f"| [`{skill}`](skills/{skill}/SKILL.md) |",
+                routing,
+            )
 
 
 if __name__ == "__main__":

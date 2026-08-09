@@ -189,7 +189,7 @@ Use this checklist as a coverage aid, not as a substitute for evidence:
 
 ## Exact output format
 
-Return the following sections in this order. Keep the report concise enough to act on; include only findings supported by evidence or clearly labeled inference. Replace every placeholder. When a section has no entries, write `None`; use `unknown` for evidence that should exist but was not obtained.
+Return the following sections in this order. Use the shared priority, confidence, evidence-status, and control-status vocabulary in `README.md`. Keep the report concise enough to act on; include only findings supported by evidence or clearly labeled inference. Replace every placeholder. When a section has no entries, write `None`; use `unknown` for evidence that should exist but was not obtained.
 
 ```markdown
 # Agent Usage Review
@@ -206,7 +206,7 @@ Return the following sections in this order. Keep the report concise enough to a
 | ... | ... | ... | ... | R0–R3 | ... |
 
 ## Control coverage
-| Dimension | Status (covered / partial / gap / unknown) | Evidence | Needed control |
+| Dimension | Status (covered / partial / gap / blocked / N/A) | Evidence | Needed control |
 |---|---|---|---|
 | Delegation boundaries | ... | ... | ... |
 | Role clarity and ownership | ... | ... | ... |
