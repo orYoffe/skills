@@ -1,4 +1,4 @@
 interface:
   display_name: "Implement and Review Ticket"
   short_description: "Write, simplify, and examine focused changes"
-  default_prompt: "Use $implement-review-ticket to write the agreed change and examine its code."
+  default_prompt: "Use $implement-review-ticket for this implementation or code review task. Obey my task limits."

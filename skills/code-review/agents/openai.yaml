@@ -1,4 +1,0 @@
-interface:
-  display_name: "Code Review"
-  short_description: "Find code defects with source-based checks"
-  default_prompt: "Use $code-review to examine this change. Give supported findings and a short decision."

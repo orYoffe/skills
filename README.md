@@ -71,9 +71,11 @@ Select one primary skill for a detailed examination:
 
 | Request | Primary skill | Optional companion |
 |---|---|---|
-| Examine a diff, commit, or pull request | [`code-review`](skills/code-review/SKILL.md) | `agent-usage-review` for agent workflow effects |
-| Examine prompts, tools, or agent traces | [`agent-usage-review`](skills/agent-usage-review/SKILL.md) | `code-review` for resulting code |
-| Improve a service | [`service-improvement`](skills/service-improvement/SKILL.md) | `code-review` for the change |
+| Examine a diff, commit, or pull request | [`implement-review-ticket`](skills/implement-review-ticket/SKILL.md) | `agent-usage-review` for agent workflow effects |
+| Examine prompts, tools, or agent traces | [`agent-usage-review`](skills/agent-usage-review/SKILL.md) | `implement-review-ticket` for resulting code |
+| Improve a service | [`service-improvement`](skills/service-improvement/SKILL.md) | `implement-review-ticket` for the change |
+
+For code review without repairs, give `implement-review-ticket` a review-only request.
 
 Use the companion only for a separate necessary question.
 Combine findings into one short result.

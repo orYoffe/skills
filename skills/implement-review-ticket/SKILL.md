@@ -1,6 +1,6 @@
 ---
 name: implement-review-ticket
-description: Use for implementation of an agreed software change and examine its diff. Use for code defects or code review comments. Keep review-only requests read-only.
+description: Use for implementation of an agreed software change and examine its diff. Use for review-only tasks, code defects, or code review comments. Keep review-only requests read-only.
 ---
 
 # Implement and Review Ticket
@@ -39,6 +39,11 @@ Examine state changes and asynchronous actions where applicable.
 Find duplicate logic, unnecessary branches, and abstractions without a present purpose.
 Make sure tests still examine behavior.
 
+Examine input validation, data isolation, secrets, and logs when relevant.
+Examine query counts, resource limits, dependency changes, and compatibility when relevant.
+Examine migrations, configuration, deployment, and recovery when relevant.
+Make sure affected user instructions remain correct.
+
 Correct defects within the permitted task. Then examine the changed code again.
 If a user comment changes behavior, go to behavior.
 If a comment changes the approach, go to planning.
@@ -48,6 +53,8 @@ Explain a suggestion that conflicts with a required contract.
 
 Within the full workflow, go to `verify-ticket-change` with the diff and current test results.
 For a direct request, stop at the requested result.
+For review-only work, give supported findings and the examined revision.
+Do not identify the change as verified while necessary checks are missing.
 Give a few file or function pointers for human code review.
 Do not call your own code review independent.
 

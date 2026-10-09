@@ -235,7 +235,7 @@ class ValidatorTests(unittest.TestCase):
         routing = readme.split("## Routing and composition", 1)[1].split(
             "Use the companion", 1
         )[0]
-        for skill in ("code-review", "agent-usage-review", "service-improvement"):
+        for skill in ("implement-review-ticket", "agent-usage-review", "service-improvement"):
             self.assertIn(
                 f"| [`{skill}`](skills/{skill}/SKILL.md) |",
                 routing,
