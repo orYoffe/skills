@@ -1,4 +1,4 @@
 interface:
-  display_name: "Evidence-Driven Code Review"
-  short_description: "Review changes for defects, risks, and maintainability"
-  default_prompt: "Use $code-review to assess this change against repository conventions and return prioritized, evidence-backed findings."
+  display_name: "Code Review"
+  short_description: "Find code defects with source-based checks"
+  default_prompt: "Use $code-review to examine this change. Give supported findings and a short decision."

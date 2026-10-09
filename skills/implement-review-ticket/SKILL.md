@@ -1,49 +1,84 @@
 ---
 name: implement-review-ticket
-description: Implement software ticket changes and review the resulting diff for behavior, correctness, simplicity, and codebase fit. Use after ticket planning, when addressing review comments, or when verification identifies a code defect with clear expected behavior.
+description: Use for implementation of an agreed software change and examine its diff. Use for code defects or code review comments. Keep review-only requests read-only.
 ---
 
 # Implement and Review Ticket
 
-## Validate before editing
+## Before code changes
 
-Check latest behavior, approach, project instructions, working diff, and related callers. Preserve unrelated user changes. If required behavior is unresolved, return to `clarify-ticket-behavior`; if the approach no longer fits, return to `plan-ticket-change`.
+Read the latest behavior, approach, project instructions, and diff.
+For an unresolved requirement, go to `clarify-ticket-behavior`.
+For an unsuitable approach, go to `plan-ticket-change`.
+For a review-only request, examine the code without repairs.
 
-## Implement
+## Write the change
 
-Make small coherent edits that satisfy observable behavior and preserve relevant contracts. Follow existing patterns and avoid unrelated cleanup. Add or adjust tests when meaningful for the change and required by project instructions. Prefer behavior assertions over tests that merely mirror implementation; do not add ritual tests for trivial low-impact edits.
+Write a small part with complete behavior.
+Use the project's code patterns.
+Add tests when they protect behavior or the project requires them.
+Do not add tests that only repeat the code structure.
 
-Run useful checks during implementation when available. Do not postpone all validation until the user can test. Separate inability to execute a check from a failing product.
+Examine each part before the next part.
+Do useful checks within your permissions and tool capabilities.
+If the user requests code review before tests, stop at that checkpoint.
+Do not complete a large feature in one step without checks.
 
-## Review before handoff
+## Simplify the code
 
-Review the actual complete task diff, not only the last edit. Check:
+Use clear code. Fewer lines alone do not make code better.
+Before removal of a helper or branch, find the behavior or constraint that it protects.
+Simplify only within the task limits.
+Make sure the required behavior stays unchanged.
+Use a project review method when requested or required.
 
-- Coverage of intended behavior and relevant failures, boundaries, and permissions.
-- Correctness across affected consumers, state transitions, async flows, and data contracts where relevant.
-- Unnecessary branches, duplicate logic, unjustified abstractions, excessive configuration, and avoidable diff size.
-- Consistency with codebase patterns, readability, and regressions caused by refactoring or related feature changes.
-- Tests that verify behavior without being weakened to accommodate a bug.
+## Examine the full diff
 
-Fix discovered problems within scope, then re-review affected code. Treat user review comments as evidence: simplify when behavior can be preserved; route to behavior or planning when a comment changes the contract or approach. Do not accept a suggestion mechanically if it breaks established behavior; explain the concrete conflict briefly.
+Examine behavior, error paths, permissions, shared consumers, and data contracts.
+Examine state changes and asynchronous actions where applicable.
+Find duplicate logic, unnecessary branches, and abstractions without a present purpose.
+Make sure tests still examine behavior.
 
-## Exit
+Correct defects within the permitted task. Then examine the changed code again.
+If a user comment changes behavior, go to behavior.
+If a comment changes the approach, go to planning.
+Explain a suggestion that conflicts with a required contract.
 
-Proceed to `verify-ticket-change` with the reviewed current diff, checks already run, and remaining evidence needed. Report human review focus only where useful, using a few file/function pointers and reasons. Never claim independent review when only this agent reviewed the change.
+## Use the result
 
-## Working contract
+Within the full workflow, go to `verify-ticket-change` with the diff and current test results.
+For a direct request, stop at the requested result.
+Give a few file or function pointers for human code review.
+Do not call your own code review independent.
 
-- For a named stage handoff, load the corresponding skill by exact frontmatter name from the available catalog or personal-skills checkout, not a hardcoded sibling directory. Report a missing component briefly and perform its responsibility from the available workflow; never claim it was loaded.
-- Use the ticket, repository, and conversation as the working record. Do not create per-change briefs, plans, checklists, reports, or other process files unless explicitly requested or required by the project. Keep working state in conversation context; do not expose a ledger after every stage.
-- Keep these facts available internally: desired behavior and examples; scope and non-goals; unresolved decisions; affected surfaces and chosen approach; current diff; verification evidence and remaining checks. Reconstruct missing facts from source evidence on resume; never assume a previous stage passed.
-- Read relevant project instructions and respect the user's authorized scope. Use available tools to do the work. Never invent repository access, execution results, skill invocation, or test evidence.
-- Ask only when an answer materially changes behavior, scope, compatibility, or risk and cannot be established from evidence. State the decision, recommended option, and consequence briefly. Continue independent work while waiting; do not implement a consequential unresolved choice.
-- Infer routine implementation details and proceed. Do not request approval at every stage. Follow actual authorization boundaries for publication, external messages, and irreversible actions; do not invent approval gates.
-- Communicate meaningful findings and decisions concisely; omit routine logs, repeated plans, and pasted code unless requested. Give reviewers a few relevant file/function pointers and decision reasons, not a narration of every edit.
-- Treat the user's correction or observed result as new evidence. Identify which assumptions it invalidates, retain valid work, and reopen only affected stages. After any code change, review the resulting diff and rerun checks whose evidence became stale.
-- Diagnose a failed check before routing it. Distinguish implementation defects, structural problems, requirement ambiguity, and environment failures. Never weaken assertions or redefine acceptance simply to obtain a pass.
-- End stage work with an internal handoff: validated facts, consequential changes, unresolved issues, and next stage. When working within the coordinated workflow, continue to that stage automatically; do not ask the user to invoke it. For an explicitly limited request, respect the requested stopping point.
+## Work rules
+
+Obey the task limits and project instructions. Use permission that the user already gave.
+Keep unrelated user changes. Do not publish or change external systems without permission.
+
+Use the ticket, code, and conversation as the work record. Do not make task documents unless requested or necessary.
+Keep decisions and test results in context. If context is missing, read the source again.
+Do not invent access, results, or user approval.
+
+Within `execute-ticket`, continue to the next necessary stage. Stop at each checkpoint that the user requests.
+For a direct stage request, complete that stage and stop. Do not start other work without permission.
+
+If a result changes an earlier decision, go to the first affected stage.
+Keep work that is still correct. After code changes, examine the diff again.
+Do tests again when their results no longer apply.
+
+## English text
+
+Use ASD-STE100 rules for English text. Use approved words with their approved meanings.
+Use necessary software terms consistently. Keep sentences within 20 words.
+Write in the active voice.
+Give one instruction per sentence. Use each technical term with one meaning.
+Do not use contractions. Keep commands and identifiers unchanged.
+Keep user updates short. Show decisions, problems, and results.
 
 ## Exact output format
 
-Keep routine stage handoffs internal and continue automatically. When a consequential user decision is needed, give the question, recommended option, and consequence in a short paragraph. For a completed or blocked task, give changed behavior, relevant verification evidence, and any remaining decision or human check in a few sentences or bullets. Omit empty items and mandatory headings; do not produce a separate report.
+Start with the result or necessary decision. Give the source, effect, and next action only when necessary.
+Give a recommendation with each decision question. At a checkpoint, give the remaining work. At that checkpoint, wait for the user.
+For completed work, give the change and tests. Give the limits of verification.
+Do not add empty sections or routine logs. Give more detail only when requested or necessary for the task.

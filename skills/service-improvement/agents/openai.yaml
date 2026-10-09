@@ -1,4 +1,4 @@
 interface:
   display_name: "Service Improvement"
-  short_description: "Review and improve production services"
-  default_prompt: "Use $service-improvement to assess this service, identify the highest-value risks, and propose verified reversible improvements."
+  short_description: "Find service problems and verify focused repairs"
+  default_prompt: "Use $service-improvement to find service problems. Make repairs only within my permitted task."

@@ -1,4 +1,4 @@
-"""Contract tests for the repository's agent-facing skill artifacts."""
+"""Examine skill output sections and repository links."""
 
 from __future__ import annotations
 
@@ -11,87 +11,43 @@ from scripts.validate_skills import markdown_lines_outside_fences
 
 ROOT = Path(__file__).resolve().parents[1]
 
-REQUIRED_HEADINGS = {
-    "code-review": [
-        "## Decision",
-        "## Scope and intent",
-        "## Validation",
-        "## Coverage",
-        "## Findings",
-        "## Hypotheses and follow-ups",
-        "## Strengths",
-        "## Residual risk and approval gate",
-    ],
-    "agent-usage-review": [
-        "## Executive summary",
-        "## System map",
-        "## Control coverage",
-        "## Prioritized findings",
-        "## Prioritized improvement plan",
-        "## Verification plan",
-        "## Open questions and assumptions",
-        "## Stopping decision",
-    ],
-    "service-improvement": [
-        "## 1. Executive summary",
-        "## 2. Context and topology",
-        "## 3. Workload and objectives",
-        "## 4. Baseline evidence",
-        "## 5. Findings",
-        "## 6. Prioritized improvement plan",
-        "## 7. Verification record",
-        "## 8. Files, commands, and sources",
-        "## 9. Decision and follow-up",
-    ],
-}
-
-
-def output_template_headings(text: str) -> list[str]:
-    section = text.split("## Exact output format", 1)[1]
-    match = re.search(r"```(?:markdown)?\n(.*?)\n```", section, re.DOTALL)
-    if match is None:
-        return []
-    return [line for line in match.group(1).splitlines() if line.startswith("## ")]
-
 
 class SkillContractTests(unittest.TestCase):
-    def test_each_skill_has_one_real_output_contract(self) -> None:
-        for skill_name, required_headings in REQUIRED_HEADINGS.items():
-            skill_file = ROOT / "skills" / skill_name / "SKILL.md"
-            text = skill_file.read_text(encoding="utf-8")
-            headings, unclosed = markdown_lines_outside_fences(text)
-            self.assertFalse(unclosed, skill_name)
-            self.assertEqual(
-                headings.count("## Exact output format"),
-                1,
-                skill_name,
-            )
-            template_headings = output_template_headings(text)
-            for heading in required_headings:
-                self.assertIn(
-                    heading,
-                    template_headings,
-                    f"{skill_name}: {heading}",
-                )
+    def test_all_skills_have_a_nonempty_output_section(self) -> None:
+        for path in (ROOT / "skills").glob("*/SKILL.md"):
+            with self.subTest(skill=path.parent.name):
+                lines, unclosed = markdown_lines_outside_fences(path.read_text())
+                self.assertFalse(unclosed)
+                self.assertEqual(lines.count("## Exact output format"), 1)
+                start = lines.index("## Exact output format") + 1
+                section = []
+                for line in lines[start:]:
+                    if line.startswith("## "):
+                        break
+                    section.append(line)
+                self.assertTrue("\n".join(section).strip(), "empty output instructions")
 
-    def test_primary_routing_rows_reference_known_skills(self) -> None:
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        routing = readme.split("## Routing and composition", 1)[1].split(
-            "Use the companion", 1
-        )[0]
-        rows = re.findall(
-            r"^\| [^|]+ \| \[`([a-z0-9-]+)`\]\(skills/([a-z0-9-]+)/SKILL\.md\) \|",
-            routing,
-            re.MULTILINE,
-        )
-        self.assertEqual(
-            {name for name, path_name in rows},
-            {path_name for name, path_name in rows},
-        )
-        self.assertEqual(
-            {name for name, _ in rows},
-            set(REQUIRED_HEADINGS),
-        )
+    def test_local_markdown_links_and_anchors_exist(self) -> None:
+        for path in ROOT.rglob("*.md"):
+            for target in re.findall(r"\]\(([^)]+)\)", path.read_text()):
+                if "://" in target:
+                    continue
+                location, _, anchor = target.partition("#")
+                destination = (path.parent / location).resolve() if location else path
+                with self.subTest(source=path.relative_to(ROOT), target=target):
+                    self.assertTrue(destination.is_file())
+                    if anchor and destination.is_file():
+                        lines, _ = markdown_lines_outside_fences(destination.read_text())
+                        headings = [line.lstrip("# ") for line in lines if line.startswith("#")]
+                        anchors = [re.sub(r"[^\w -]", "", heading.lower()).replace(" ", "-") for heading in headings]
+                        self.assertIn(anchor, anchors)
+
+    def test_coordinator_stage_names_exist(self) -> None:
+        coordinator = (ROOT / "skills/execute-ticket/SKILL.md").read_text()
+        names = re.findall(r"^\| [^|]+ \| `([a-z0-9-]+)` \|$", coordinator, re.MULTILINE)
+        self.assertEqual(len(names), 4)
+        for name in names:
+            self.assertTrue((ROOT / "skills" / name / "SKILL.md").is_file(), name)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
 interface:
   display_name: "Agent Usage Review"
-  short_description: "Review agent workflows for safety, quality, and efficiency"
-  default_prompt: "Use $agent-usage-review to assess this agent workflow or codebase and produce a prioritized improvement report."
+  short_description: "Examine agent decisions, tools, and results"
+  default_prompt: "Use $agent-usage-review to examine this workflow. Give supported findings and necessary next actions."

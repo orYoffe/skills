@@ -1,4 +1,4 @@
 interface:
   display_name: "Implement and Review Ticket"
-  short_description: "Implement, simplify, and review focused changes"
-  default_prompt: "Use $implement-review-ticket to work through this software ticket with concise decisions and no extra process documents."
+  short_description: "Write, simplify, and examine focused changes"
+  default_prompt: "Use $implement-review-ticket to write the agreed change and examine its code."

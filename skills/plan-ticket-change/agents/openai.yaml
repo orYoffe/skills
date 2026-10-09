@@ -1,4 +1,4 @@
 interface:
   display_name: "Plan Ticket Change"
-  short_description: "Fit the change to the codebase and nearby behavior"
-  default_prompt: "Use $plan-ticket-change to work through this software ticket with concise decisions and no extra process documents."
+  short_description: "Fit a focused change to the codebase"
+  default_prompt: "Use $plan-ticket-change to examine effects and give an approach. Do not change code."

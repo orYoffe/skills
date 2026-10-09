@@ -18,5 +18,7 @@ jobs:
           python-version: "3.12"
       - name: Validate skill structure
         run: python -B scripts/validate_skills.py
-      - name: Run skill regression and contract tests
+      - name: Examine English text
+        run: python -B scripts/check_text.py
+      - name: Do regression and link tests
         run: python -B -m unittest discover -s scripts -p 'test_*.py'

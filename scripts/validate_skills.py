@@ -1,8 +1,7 @@
-"""Validate the repository's self-contained agent skills without third-party packages.
+"""Examine skill structure without third-party packages.
 
-The validator intentionally supports the small metadata subset used by this
-repository. It fails closed on unknown or misindented metadata instead of
-pretending to be a general YAML parser.
+This validator supports only the metadata format used in this repository.
+It rejects unknown fields and incorrect indentation. It is not a general YAML parser.
 """
 
 from __future__ import annotations
@@ -27,7 +26,7 @@ def fail(errors: list[str], path: Path, message: str) -> None:
 
 
 def markdown_lines_outside_fences(text: str) -> tuple[list[str], bool]:
-    """Return non-fenced lines and whether a Markdown fence is unclosed."""
+    """Return lines outside code fences and an unclosed-fence flag."""
 
     lines_outside_fences: list[str] = []
     open_marker: str | None = None
@@ -176,7 +175,7 @@ def main() -> int:
         print("\n".join(f"- {error}" for error in errors), file=sys.stderr)
         return 1
     count = len([path for path in skills_dir.iterdir() if path.is_dir()])
-    print(f"Validated {count} skill(s).")
+    print(f"Structure checks passed for {count} skills.")
     return 0
 
 

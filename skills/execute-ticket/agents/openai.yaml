@@ -1,4 +1,4 @@
 interface:
   display_name: "Execute Ticket"
-  short_description: "Drive tickets from intent to verified changes"
-  default_prompt: "Use $execute-ticket to work through this software ticket with concise decisions and no extra process documents."
+  short_description: "Work through tickets with less reading"
+  default_prompt: "Use $execute-ticket for this task. Follow my task limits and checkpoints."
