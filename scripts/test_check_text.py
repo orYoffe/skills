@@ -12,6 +12,11 @@ class TextCheckTests(unittest.TestCase):
         self.assertEqual(text_errors(" ".join(["word"] * 20) + "."), [])
         self.assertIn("21 words", text_errors(" ".join(["word"] * 21) + ".")[0][1])
 
+    def test_paragraph_limit(self):
+        self.assertEqual(text_errors("Do the checks. " * 6), [])
+        self.assertIn("six sentences", text_errors("Do the checks. " * 7)[0][1])
+        self.assertEqual(text_errors("Do the checks. " * 4 + "\n\n" + "Do the checks. " * 4), [])
+
     def test_wrapped_paragraph_is_one_sentence(self):
         text = " ".join(["word"] * 11) + "\n" + " ".join(["word"] * 10) + "."
         self.assertEqual(text_errors(text)[0][0], 1)

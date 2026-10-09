@@ -61,6 +61,7 @@ Do not weaken tests to get a pass.
 For a stage-only task, stop when that stage is complete.
 For full implementation, make sure the results apply to the current code.
 Do not identify work as verified while a necessary check or decision is missing.
+
 For user tests, give a short set of actions and expected results. Identify the task as ready for those tests.
 Continue from the user's results. Do not tell the user to give the ticket again.
 
@@ -85,6 +86,7 @@ Do tests again when their results no longer apply.
 Use ASD-STE100 rules for English text. Use approved words with their approved meanings.
 Use necessary software terms consistently. Keep sentences within 20 words.
 Write in the active voice.
+
 Give one instruction per sentence. Use each technical term with one meaning.
 Do not use contractions. Keep commands and identifiers unchanged.
 Keep user updates short. Show decisions, problems, and results.
@@ -92,6 +94,9 @@ Keep user updates short. Show decisions, problems, and results.
 ## Exact output format
 
 Start with the result or necessary decision. Give the source, effect, and next action only when necessary.
+
 Give a recommendation with each decision question. At a checkpoint, give the remaining work. At that checkpoint, wait for the user.
+
 For completed work, give the change and tests. Give the limits of verification.
+
 Do not add empty sections or routine logs. Give more detail only when requested or necessary for the task.

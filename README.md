@@ -93,6 +93,6 @@ python -B -m unittest discover -s scripts -p 'test_*.py'
 
 CI does these checks on pull requests and pushes to `main`.
 Structure tests examine packaging, metadata, and links.
-The text check finds long sentences and contractions in Markdown and skill metadata.
+The text check finds long sentences, long paragraphs, and contractions in Markdown and skill metadata.
 These checks do not prove agent behavior or full STE conformance.
 Use the [evaluation scenarios](docs/ticket-workflow.md#evaluate-the-workflow) to examine agent behavior.

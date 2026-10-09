@@ -1,4 +1,4 @@
-"""Find long sentences and contractions. This is not a full STE checker."""
+"""Find long sentences, long paragraphs, and contractions. This is not a full STE checker."""
 
 from __future__ import annotations
 
@@ -75,7 +75,10 @@ def text_errors(text: str) -> list[tuple[int, str]]:
         block = re.sub(r"`+[^`]+`+", "CODE", block)
         block = re.sub(r"\[([^]]+)\]\([^\s)]+\)", r"\1", block)
         block = re.sub(r"https?://\S+", "URL", block)
-        for sentence in re.split(r"[.!?](?:[\"'’]?\s+|$)", block):
+        sentences = [part for part in re.split(r"[.!?](?:[\"'’]?\s+|$)", block) if WORDS.search(part)]
+        if len(sentences) > 6:
+            errors.append((line, "paragraph has more than six sentences"))
+        for sentence in sentences:
             count = len(WORDS.findall(sentence))
             if count > 20:
                 errors.append((line, f"sentence has {count} words; maximum is 20"))

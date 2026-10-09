@@ -67,7 +67,7 @@ Use a new technical term only when it gives a necessary, precise software meanin
 ## Check limits
 
 `python -B scripts/check_text.py` examines Markdown prose and skill metadata.
-It finds sentences above 20 words and common contractions.
+It finds sentences above 20 words, paragraphs above six sentences, and common contractions.
 It ignores headings, code fences, inline code contents, and link destinations.
 It treats each inline code span as one word.
 It examines table cells separately and joins wrapped paragraph lines.
