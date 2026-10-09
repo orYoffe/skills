@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Ticket Change"
+  short_description: "Verify behavior and route failures to their source"
+  default_prompt: "Use $verify-ticket-change to work through this software ticket with concise decisions and no extra process documents."

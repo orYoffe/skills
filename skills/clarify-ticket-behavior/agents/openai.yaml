@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clarify Ticket Behavior"
+  short_description: "Resolve expected behavior with focused questions"
+  default_prompt: "Use $clarify-ticket-behavior to work through this software ticket with concise decisions and no extra process documents."
