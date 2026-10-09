@@ -9,7 +9,7 @@ description: Investigate codebase impact and choose a focused implementation for
 
 Read the established behavior, relevant project instructions, current diff, and entry points. Trace the real path across UI, state, services, storage, shared utilities, or external contracts as applicable. Inspect callers and existing tests rather than relying solely on filenames.
 
-If observed behavior conflicts with expectations or adjacent features require a product choice, return to `clarify-ticket-behavior` before choosing a consequential implementation.
+Treat a difference between current and requested behavior as expected for a change or bug fix. Return to `clarify-ticket-behavior` only when evidence reveals an unresolved contradiction in the desired behavior, an unclear compatibility requirement, or a consequential product choice affecting adjacent features.
 
 ## Choose the approach
 
