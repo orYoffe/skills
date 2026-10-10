@@ -15,7 +15,7 @@ from pathlib import Path
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FRONTMATTER_FIELD = re.compile(r"^(name|description):\s*(\S.*)$")
 UI_FIELD = re.compile(r'^ {2}(display_name|short_description|default_prompt):\s+"([^"]*)"\s*$')
-README_LINK = re.compile(r"\]\((skills/([a-z0-9-]+)/SKILL\.md)\)")
+README_LINK = re.compile(r"\]\(((?:\.\./)?skills/([a-z0-9-]+)/SKILL\.md)\)")
 NULL_VALUE = re.compile(r"^(?:null|Null|NULL|~)(?:\s+#.*)?$")
 FENCE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 EXACT_OUTPUT_HEADING = re.compile(r"^ {0,3}## Exact output format\s*$")
@@ -141,15 +141,26 @@ def validate_readme(root: Path, skill_names: set[str], errors: list[str]) -> Non
     if not readme.is_file():
         fail(errors, readme, "missing README.md")
         return
-    text = readme.read_text(encoding="utf-8")
-    linked_names = {skill_name for _, skill_name in README_LINK.findall(text)}
-    for link, skill_name in README_LINK.findall(text):
-        if not (root / link).is_file():
-            fail(errors, readme, f"link target does not exist: {link}")
-        if not (root / "skills" / skill_name / "SKILL.md").is_file():
-            fail(errors, readme, f"linked skill is missing: {skill_name}")
+    documents = [readme]
+    readme_text = readme.read_text(encoding="utf-8")
+    catalog = root / "docs" / "independent-skills.md"
+    if "](docs/independent-skills.md)" in readme_text:
+        if catalog.is_file():
+            documents.append(catalog)
+        else:
+            fail(errors, readme, "independent skill catalog is missing")
+    linked_names: set[str] = set()
+    for document in documents:
+        text = document.read_text(encoding="utf-8")
+        for link, skill_name in README_LINK.findall(text):
+            linked_names.add(skill_name)
+            if not (document.parent / link).is_file():
+                fail(errors, document, f"link target does not exist: {link}")
+            if not (root / "skills" / skill_name / "SKILL.md").is_file():
+                fail(errors, document, f"linked skill is missing: {skill_name}")
     for skill_name in sorted(skill_names - linked_names):
-        fail(errors, readme, f"skill is not indexed in README.md: {skill_name}")
+        fail(errors, readme, f"skill is not indexed in README.md or its independent catalog: {skill_name}")
+
 
 
 def main() -> int:

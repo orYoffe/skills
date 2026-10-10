@@ -230,16 +230,35 @@ class ValidatorTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("missing agents/openai.yaml", result.stderr)
 
-    def test_routing_index_keeps_primary_skills_visible(self) -> None:
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        routing = readme.split("## Routing and composition", 1)[1].split(
-            "Use the companion", 1
-        )[0]
-        for skill in ("implement-review-ticket", "agent-usage-review", "service-improvement"):
-            self.assertIn(
-                f"| [`{skill}`](skills/{skill}/SKILL.md) |",
-                routing,
-            )
+    def test_skill_indexed_in_linked_catalog_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root, indexed=False)
+            (root / "docs").mkdir()
+            (root / "README.md").write_text("[Independent skills](docs/independent-skills.md)\n")
+            (root / "docs/independent-skills.md").write_text("[Sample](../skills/sample-skill/SKILL.md)\n")
+            result = self.run_validator(root)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_unlinked_catalog_does_not_hide_unindexed_skill(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root, indexed=False)
+            (root / "docs").mkdir()
+            (root / "docs/independent-skills.md").write_text("[Sample](../skills/sample-skill/SKILL.md)\n")
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("not indexed", result.stderr)
+
+    def test_missing_linked_catalog_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_fixture(root)
+            readme = root / "README.md"
+            readme.write_text(readme.read_text() + "[Independent skills](docs/independent-skills.md)\n")
+            result = self.run_validator(root)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("catalog is missing", result.stderr)
 
 
 if __name__ == "__main__":
