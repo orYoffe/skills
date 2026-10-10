@@ -12,15 +12,9 @@ Give AI a software ticket. Get focused questions, code changes, code review, and
 
 `execute-ticket` coordinates four stages:
 
-```mermaid
-flowchart TD
-    B["Clarify behavior"] --> P["Plan the change"]
-    P --> I["Implement and review"]
-    I --> V["Verify behavior"]
-    V -->|"Code defect"| I
-    V -->|"Approach problem"| P
-    V -->|"Changed requirement"| B
-```
+<img src="docs/assets/ticket-workflow.png" width="480" alt="Ticket stages: clarify behavior, plan, implement and review, then verify. New findings return to the affected stage.">
+
+[View the diagram](docs/assets/ticket-workflow.png) · [SVG source](docs/assets/ticket-workflow.svg)
 
 Start at the first stage that needs work. Stop at requested checkpoints.
 Small fixes need less planning. Existing work can start at code review or verification.
@@ -32,21 +26,28 @@ Small fixes need less planning. Existing work can start at code review or verifi
 From your project directory:
 
 ```bash
-npx skills add https://github.com/orYoffe/skills \
-  --skill execute-ticket clarify-ticket-behavior plan-ticket-change \
-  implement-review-ticket verify-ticket-change
+npx skills add orYoffe/skills \
+  --skill \
+  execute-ticket \
+  clarify-ticket-behavior \
+  plan-ticket-change \
+  implement-review-ticket \
+  verify-ticket-change
 ```
 
 `npx` runs the [skills installer](https://github.com/vercel-labs/skills). The installer gets these skills from GitHub.
-This method needs Node.js and npm. Select your agent when prompted.
+This method needs Node.js and npm. Select your agent if prompted.
 
 ### 2. Give the agent a ticket
 
 ```text
-Use $execute-ticket for this ticket: <task or accessible link>.
+Use the execute-ticket skill
+for this ticket:
+<task or accessible link>
 ```
 
-The agent needs access to your codebase. Use your host's skill picker if its syntax differs.
+The agent needs access to your codebase.
+See [agent setup](docs/ticket-workflow.md#agent-setup) for commands specific to your agent.
 For manual installation, copy all five skill folders into your agent's skills directory.
 
 ## Control the work
@@ -67,9 +68,14 @@ No extra ticket documents are necessary.
 Example result for a discount bug:
 
 ```text
-Changed: invalid discount percentages now raise ValueError.
-Checked: valid discounts, boundaries, invalid inputs, and invoice behavior.
-Remaining: the checkout integration needs a test environment.
+Changed: invalid discounts now
+raise ValueError.
+
+Checked: valid discounts, boundaries,
+invalid inputs, and invoice behavior.
+
+Remaining: checkout integration
+needs a test environment.
 ```
 
 Missing checks remain visible. A build pass alone does not prove runtime behavior.
@@ -84,7 +90,7 @@ Missing checks remain visible. A build pass alone does not prove runtime behavio
 | [`implement-review-ticket`](skills/implement-review-ticket/SKILL.md) | Write code or do code review without repairs. |
 | [`verify-ticket-change`](skills/verify-ticket-change/SKILL.md) | Compare results with expected behavior. |
 
-## More
+## Guides
 
 - [Usage guide](docs/ticket-workflow.md): examples, preferences, and stage-only work.
 - [Independent skills](docs/independent-skills.md): separate tools with their own installation and usage.

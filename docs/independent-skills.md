@@ -3,6 +3,7 @@
 These tools are separate from the [ticket framework](../README.md).
 They are not workflow stages or required companions.
 Install and use each tool only for its own task.
+These examples use Codex syntax. See [agent setup](ticket-workflow.md#agent-setup) for other agent commands.
 
 ## Examine an agent workflow
 
@@ -13,14 +14,18 @@ It starts read-only and gives supported findings.
 ### Install
 
 ```bash
-npx skills add https://github.com/orYoffe/skills --skill agent-usage-review
+npx skills add orYoffe/skills \
+  --skill agent-usage-review
 ```
 
 ### Use
 
 ```text
-Use $agent-usage-review to examine these agent traces and prompts.
-Find repeated work and weak verification. Give findings without repairs.
+Use $agent-usage-review to examine
+these agent traces and prompts.
+Find repeated work and weak
+verification. Give findings without
+repairs.
 ```
 
 ## Examine a software service
@@ -32,14 +37,18 @@ It starts read-only. Code changes need permission within the task.
 ### Install
 
 ```bash
-npx skills add https://github.com/orYoffe/skills --skill service-improvement
+npx skills add orYoffe/skills \
+  --skill service-improvement
 ```
 
 ### Use
 
 ```text
-Use $service-improvement to examine this service's slow responses.
-Compare code paths and available measurements. Give findings without code changes.
+Use $service-improvement to examine
+this service's slow responses.
+Compare code paths and available
+measurements. Give findings without
+code changes.
 ```
 
 ## Keep the tasks separate
