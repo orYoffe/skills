@@ -10,7 +10,8 @@ description: Use for implementation of an agreed software change and examine its
 Read the latest behavior, approach, project instructions, and diff.
 For an unresolved requirement, go to `clarify-ticket-behavior`.
 For an unsuitable approach, go to `plan-ticket-change`.
-For a review-only request, examine the code without repairs.
+For a review-only request, go directly to examination of the full diff.
+Skip writing and simplification. Give suggested corrections without code changes.
 
 ## Write the change
 
@@ -54,6 +55,9 @@ Explain a suggestion that conflicts with a required contract.
 Within the full workflow, go to `verify-ticket-change` with the diff and current test results.
 For a direct request, stop at the requested result.
 For review-only work, give supported findings and the examined revision.
+For each finding, give a source, behavior effect, and useful correction.
+If no supported defect is found, give that result and the review limits.
+
 Do not identify the change as verified while necessary checks are missing.
 Give a few file or function pointers for human code review.
 Do not call your own code review independent.

@@ -29,7 +29,8 @@ Wait for each necessary answer. Continue work that does not depend on that answe
 You can group independent questions if the user prefers that method.
 
 For a requested interview, examine the related choices in more detail.
-Stop when the choices within the task limits are clear.
+Stop when expected results are testable and necessary decisions within the task limits are resolved.
+Do not extend the interview to unrelated choices.
 Do not make a new approval necessary for routine decisions.
 
 ## Use the result

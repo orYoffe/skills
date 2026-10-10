@@ -11,6 +11,10 @@ Start read-only. Change the service only within the user's permitted task.
 ## Find the task limits
 
 Find the service, revision, environment, user paths, goal, and task limits.
+Start with one improvement goal from the user request.
+Use existing decisions to select that goal. Ask only when a necessary choice remains unresolved.
+Select measures and success limits that apply to the goal.
+
 Find permitted actions and production limits.
 For a planned service, do not invent runtime measurements or operating targets.
 
@@ -38,6 +42,9 @@ Use profiling or controlled tests only when safe and representative.
 Do not propose a rewrite, cache, or increased concurrency without a supported reason.
 
 ## Examine the service
+
+Use these areas as a guide. Examine areas that support the selected goal or protect affected behavior.
+Do not make a complete service audit necessary for a focused improvement.
 
 | Area | Examine |
 |---|---|

@@ -20,6 +20,10 @@ Within full execution, use `implement-review-ticket` when necessary.
 4. Compare actual and expected results.
 5. Find the cause of each failure before code changes.
 
+Match each required behavior to an actual test result or runtime observation.
+Keep that comparison in context. Do not make a separate test document necessary.
+Identify required behavior without a current result as unverified.
+
 A build pass does not prove runtime behavior.
 A mocked test does not prove that an external integration works.
 Identify new defects, existing defects, fixture errors, and environment failures.
@@ -31,7 +35,7 @@ Within full execution, send code defects to `implement-review-ticket`.
 Send structural problems to `plan-ticket-change`.
 Send unresolved or changed requirements to `clarify-ticket-behavior`.
 
-For verification only, give defects without repairs without the user's permission for repairs.
+For verification only, give defects without repairs. Make repairs only when the user authorizes them.
 After repairs, examine the diff again. Do tests again when their results no longer apply.
 Add wider tests only when the effects or failures make them necessary.
 

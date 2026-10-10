@@ -58,7 +58,14 @@ Do not weaken tests to get a pass.
 
 ## Complete the task
 
+For clarification, finish with testable expected results and resolved necessary decisions.
+For planning, finish with an approach, affected contracts, and a test method.
+For implementation and review, finish with the permitted code changes and supported findings.
+For review only, finish with supported findings and the examined revision.
+For verification, finish with current results and any missing checks.
+
 For a stage-only task, stop when that stage is complete.
+A completed plan or code review does not mean the implementation is verified.
 For full implementation, make sure the results apply to the current code.
 Do not identify work as verified while a necessary check or decision is missing.
 

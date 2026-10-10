@@ -19,6 +19,10 @@ For each stage, find its inputs, outputs, owner, allowed actions, and stop condi
 Use prompts, code, configuration, traces, and tests as sources.
 A prompt describes intended behavior. It does not prove actual behavior.
 
+Compare intended behavior with recorded actions and results.
+For each difference, identify the source instruction and the observed action.
+Missing trace entries do not prove that an action did not occur.
+
 ## Examine the workflow
 
 | Area | Examine |
@@ -60,6 +64,10 @@ Do not count repeated unsupported claims as independent proof.
 Use useful measurements for cost and response time. Do not invent measurements.
 
 ## Give findings
+
+Put failures supported by actual traces before possible design concerns.
+Identify a concern without observed failure as inferred or unverified.
+Do not present that concern as an observed defect.
 
 Give each finding a source, failure effect, correction, and way to verify the correction.
 Use P0 for critical defects, P1 for high impact, and P2 for important bounded defects.

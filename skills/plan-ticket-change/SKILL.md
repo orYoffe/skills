@@ -24,7 +24,8 @@ Do not add layers or options for possible future requirements.
 
 Include a refactor only when it makes the required change correct, clear, or safe to verify.
 Keep optional cleanup outside the task.
-If a related change affects other users, get that decision before implementation.
+If a related change exceeds agreed behavior or task limits, get the necessary decision before implementation.
+Effects on other users do not require a new decision when those effects are already agreed.
 
 For a large change, select small parts with complete behavior.
 Select useful tests for each part and each affected contract.
